@@ -11,6 +11,7 @@ from django.utils.encoding import force_str
 from django.utils.html import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 
 from . import utils
 
@@ -71,9 +72,8 @@ class SimpleHistoryAdmin(admin.ModelAdmin):
                 for list_entry in action_list:
                     setattr(list_entry, history_list_entry, value_for_entry(list_entry))
 
-        content_type = self.content_type_model_cls.objects.get_by_natural_key(
-            *USER_NATURAL_KEY
-        )
+        content_type = self.content_type_model_cls.objects.get_for_model(get_user_model())
+        
         admin_user_view = "admin:%s_%s_change" % (
             content_type.app_label,
             content_type.model,
